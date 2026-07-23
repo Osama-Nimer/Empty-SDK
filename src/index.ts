@@ -1,14 +1,25 @@
-import express from "express";
+export type EmptySDKOptions = {
+  apiKey: string;
+  baseUrl?: string;
+};
 
-const app = express();
-const port = Number(process.env.PORT) || 3000;
+export class EmptySDK {
+  private readonly apiKey: string;
+  private readonly baseUrl: string;
 
-app.use(express.json());
+  constructor(options: EmptySDKOptions) {
+    this.apiKey = options.apiKey;
+    this.baseUrl = options.baseUrl ?? "https://api.example.com";
+  }
 
-app.get("/", (_req, res) => {
-  res.json({ message: "Express + TypeScript server is running" });
-});
+  async ping() {
+    return {
+      ok: true,
+      baseUrl: this.baseUrl,
+    };
+  }
 
-app.listen(port, () => {
-  console.log(`Server listening on http://localhost:${port}`);
-});
+  getApiKey() {
+    return this.apiKey;
+  }
+}
