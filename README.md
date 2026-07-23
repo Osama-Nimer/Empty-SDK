@@ -7,13 +7,7 @@ A minimal TypeScript SDK package.
 Install directly from GitHub:
 
 ```bash
-npm install github:YOUR_USERNAME/YOUR_REPO
-```
-
-Example:
-
-```bash
-npm install github:osama/empty-sdk
+npm install github:Osama-Nimer/Empty-SDK
 ```
 
 ## Usage
