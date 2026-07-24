@@ -1,25 +1,50 @@
-export type EmptySDKOptions = {
+import type { Express } from "express";
+
+import { ExpressEndpointDiscoveryAdapter } from "./discovery/express-adapter.js";
+
+import type {
+  EndpointDiscoveryResult
+} from "./discovery/types.js";
+
+export interface EmptySDKOptions {
   apiKey: string;
-  baseUrl?: string;
-};
+}
 
 export class EmptySDK {
   private readonly apiKey: string;
-  private readonly baseUrl: string;
+
+  private readonly expressAdapter =
+    new ExpressEndpointDiscoveryAdapter();
+
+  private app?: Express;
 
   constructor(options: EmptySDKOptions) {
+    if (!options.apiKey) {
+      throw new Error("SDK API key is required.");
+    }
+
     this.apiKey = options.apiKey;
-    this.baseUrl = options.baseUrl ?? "https://api.example.com";
   }
 
-  async ping() {
-    return {
-      ok: true,
-      baseUrl: this.baseUrl,
-    };
+  use(app: Express): this {
+    this.app = app;
+
+    return this;
   }
 
-  getApiKey() {
-    return this.apiKey;
+  discoverEndpoints(): EndpointDiscoveryResult {
+    if (!this.app) {
+      throw new Error(
+        "No Express application has been connected. Call sdk.use(app) first."
+      );
+    }
+
+    return this.expressAdapter.discover(this.app);
   }
 }
+
+export type {
+  DiscoveredEndpoint,
+  EndpointDiscoveryResult,
+  SupportedHttpMethod
+} from "./discovery/types.js";

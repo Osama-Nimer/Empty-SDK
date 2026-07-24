@@ -25,8 +25,11 @@
   ],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "express": "^5.2.1"
+  },
   "devDependencies": {
+    "@types/express": "^5.0.6",
     "@types/node": "^20.14.10",
     "typescript": "^5.5.3"
   }
