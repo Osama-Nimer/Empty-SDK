@@ -25,7 +25,7 @@ export class ExpressEndpointDiscoveryAdapter {
   discover(app: Express): EndpointDiscoveryResult {
     const expressApp = app as unknown as ExpressApplicationWithRouter;
 
-    const router = expressApp.router ?? expressApp._router;
+    const router = expressApp._router ?? this.readExpress5Router(expressApp);
 
     if (!router?.stack) {
       return {
@@ -74,6 +74,16 @@ export class ExpressEndpointDiscoveryAdapter {
     }
 
     return this.removeDuplicates(endpoints);
+  }
+
+  private readExpress5Router(
+    app: ExpressApplicationWithRouter,
+  ): ExpressApplicationWithRouter["router"] {
+    try {
+      return app.router;
+    } catch {
+      return undefined;
+    }
   }
 
   private extractRoute(
